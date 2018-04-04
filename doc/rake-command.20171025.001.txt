@@ -1,0 +1,5 @@
+
+# rails generate model User uuid:string:unique name:string
+
+rails generate migration AddColumnToMemo time:string
+

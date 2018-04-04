@@ -1,0 +1,8 @@
+
+%select.form-control{id: "#{field_name}_hour", name: "job_log[#{field_name}_hour]", style: "float: left; width: 100px;", value: "#{field_value}", placeholder: "00"}
+  - 0.upto(24).each do | index |
+    - value = ('00' + index.to_s)[-2, 2]
+    - if field_value.to_i == index
+      %option{selected: "selected"}="#{value}"
+    - else
+      %option="#{value}"

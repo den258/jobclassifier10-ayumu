@@ -1,0 +1,88 @@
+
+:javascript
+  $(document).on('change', ':file', function() {
+    var input = $(this),
+    numFiles = input.get(0).files ? input.get(0).files.length : 1,
+    label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+    input.parent().parent().next(':text').val(label);
+  });
+
+- case params["tab"]
+  - when "manage"
+    - is_active_manage = "active"
+    - is_active_input = ""
+  - when "input"
+    - is_active_manage = ""
+    - is_active_input = "active"
+  - else
+    - is_active_manage = ""
+    - is_active_input = "active"
+
+%ul.nav.nav-tabs
+  %li{class: is_active_input}
+    %a{href: "#sampleContentA", "data-toggle" => "tab"}
+      日記
+  %li{class: is_active_manage}
+    %a{href: "#sampleContentB", "data-toggle" => "tab"}
+      データ管理
+.tab-content
+  %p
+  %div.tab-pane{id: "sampleContentA", class: is_active_input}
+    %p
+    = link_to '新規追加', new_memo_path(date: Date.today.strftime("%Y-%m-%d")), class: "btn btn-default"
+    %table.table.table-striped
+      %thead
+        %tr
+          %th
+            .record_top_memo
+              = "[日付](曜日)"
+            .record_buttom_memo
+              コメント
+          %th
+            操作
+      %tbody
+        - @memos.each do | memo |
+          %tr
+            %td
+              .record_top_memo
+                = "["
+                = memo.date
+                = "]["
+                = memo.time
+                = "]"
+                = "(" + %w[日 月 火 水 木 金 土][Date.parse(memo.date).wday] + ")"
+              .record_buttom_memo
+                = simple_format(memo.text)
+            %td.width150
+              = link_to '編集', edit_memo_path(memo.id), class: "btn btn-default btn-xs"
+              = link_to '削除', memo, method: :delete, class: "btn btn-default btn-xs", data: { confirm: '本当に削除してもよろしいですか？' }
+  %div.tab-pane{id: "sampleContentB", class: is_active_manage}
+    %p
+    .alert.alert-info
+      日記の全てのデータを XML ファイルとしてダウンロードすることができます。
+    %div.input-group
+      = link_to 'すべての日記をダウンロードする', memos_file_download_path(format: :xml), class: "btn btn-default"
+    %hr
+    %div.alert.alert-info
+      XML に書かれているデータを追加することができます。
+    - flash.each do |key, value|
+      %div.alert{class: "alert-" + key}
+        = value
+    %form{class: "form-inline", enctype: "multipart/form-data", action: "/memos/file_upload", name: "form", method: "post"}
+      %div{class: "form-group", style: "width:200px;"}
+        %div{class: "input-group"}
+          %input{type: "file", id: "file_upload", name: "file_upload", style: "display: none;"}
+          %span{class: "input-group-btn"}
+            %button{class: "btn btn-default", type: "button", onclick: "$('#file_upload').click();"}
+              %i{class: "glyphicon glyphicon-folder-open"}
+          %div{class: "input-group"}
+            %input{id: "dummy_file", type: "text", class: "form-control", placeholder: "select file...", disabled: "disabled"}       
+      %button{type: "submit", name: "csv_up", class: "btn btn-primary"}
+        upload
+    :javascript
+      $(function(){
+        $('#file_upload').change(function() {
+          $('#dummy_file').val($(this).val());
+        });
+      })
+    %hr

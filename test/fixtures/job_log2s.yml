@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  date: MyString
+  start_time: MyString
+  end_time: MyString
+  title: MyString
+  spend_time: 1.5
+  day_of_the_week: MyString
+
+two:
+  date: MyString
+  start_time: MyString
+  end_time: MyString
+  title: MyString
+  spend_time: 1.5
+  day_of_the_week: MyString

@@ -1,0 +1,13 @@
+
+ja:
+  activerecord:
+    models:
+      users: ユーザー
+    attributes:
+      users:
+        account_no: アカウント番号
+        name: 名前
+        tel: 電話番号
+        mail: メールアドレス
+
+

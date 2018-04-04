@@ -1,0 +1,15 @@
+
+ja:
+  activerecord:
+    models:
+      job_logs: 作業ログ
+    attributes:
+      job_logs:
+        date: 日付
+        start_time: 開始
+        end_time: 終了
+        title: 作業タイトル
+        spend_time: 作業時間
+        day_of_the_week: 曜日
+
+

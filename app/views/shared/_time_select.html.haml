@@ -1,0 +1,8 @@
+
+%div
+  - if time_value
+    - hour, minute = time_value[0, 2], time_value[3, 2]
+  = render partial: "shared/hour_select", locals: {field_name: time_name, field_value: hour}
+  %span{style: "float: left"}
+    = "："
+  = render partial: "shared/minute_select", locals: {field_name: time_name, field_value: minute}

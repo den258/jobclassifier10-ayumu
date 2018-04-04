@@ -1,0 +1,174 @@
+/*
+ * This is a manifest file that'll be compiled into application.css, which will include all the files
+ * listed below.
+ *
+ * Any CSS and SCSS file within this directory, lib/assets/stylesheets, vendor/assets/stylesheets,
+ * or any plugin's vendor/assets/stylesheets directory can be referenced here using a relative path.
+ *
+ * You're free to add application-wide styles to this file and they'll appear at the bottom of the
+ * compiled file so the styles you add here take precedence over styles defined in any styles
+ * defined in the other CSS/SCSS files in this directory. It is generally better to create a new
+ * file per style scope.
+ *
+ *= require_tree .
+ *= require_self
+ */
+
+body {
+  /*
+  background: #00F;
+  */
+}
+
+div.body_container {
+  padding: 65px 0px;
+  width: 90%;
+}
+
+.record_top {
+  width: 180px;
+}
+
+.record_buttom {
+}
+
+.record_top_memo {
+  width: 220px;
+}
+
+.record_buttom_memo {
+  width: 250px;
+}
+
+th.record_operation {
+  width: 100px;
+}
+
+td.record_operation {
+  width: 100px;
+}
+
+.width50 {
+  width: 50px;
+}
+
+.width100 {
+  width: 100px;
+}
+
+.width150 {
+  width: 150px;
+}
+
+.width200 {
+  width: 200px;
+}
+
+/* フォントサイズ */
+.text70{font-size:70%}
+.text80{font-size:80%}
+.text90{font-size:90%}
+.text100{font-size:100%}
+.text110{font-size:110%}
+.text120{font-size:120%}
+.text130{font-size:130%}
+.text140{font-size:140%}
+.text150{font-size:150%}
+.text160{font-size:160%}
+.text170{font-size:170%}
+.text180{font-size:180%}
+.text190{font-size:190%}
+.text200{font-size:200%}
+.text210{font-size:210%}
+.text220{font-size:220%}
+
+.search_box {
+  margin: 10px;
+}
+
+/* medium */
+
+@media (min-width: 570px) {
+  body {
+    /*
+    background: #F00;
+    */
+  }
+  
+  div.body_container {
+    padding: 65px 0px;
+    width: 90%;
+  }
+
+  .record_top {
+    float: left;
+  }
+
+  .record_buttom {
+    float: left;
+  }
+
+  .record_top_memo {
+    float: left;
+  }
+
+  .record_buttom_memo {
+    float: left;
+  }
+
+  th.record_operation {
+    width: 300px;
+  }
+  
+  td.record_operation {
+    width: 300px;
+  }
+
+  .memo_text {
+    width: 250px;
+  }
+  
+}
+
+/* large */
+
+@media (min-width: 820px) {
+  body {
+    /*
+    background: #0F0;
+    */
+  }
+
+  div.body_container {
+    padding: 65px 0px;
+    width: 78%;
+  }
+
+  .record_top {
+    float: left;
+    width: 180px;
+  }
+
+  .record_buttom {
+    float: left;
+  }
+
+  .record_top_memo {
+    float: left;
+    width: 220px;
+  }
+
+  .record_buttom_memo {
+    float: left;
+    width: 710px;
+  }
+
+  th.record_operation {
+    width: 300px;
+  }
+  
+  td.record_operation {
+    width: 300px;
+  }
+}
+

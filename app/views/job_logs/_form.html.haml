@@ -1,0 +1,53 @@
+- unless @job_log.date
+  - if params[:date]
+    - date = params[:date]
+  - else
+    - date = Date.today.strftime("%Y-%m-%d")
+- else
+  - date = @job_log.date
+
+:javascript
+  $(function() {
+    $("#title").autocomplete({
+      source: #{@keyword_list.to_s}
+    });
+  });
+
+:javascript
+  $(function() {
+    $("#date").datepicker();
+    $("#date").datepicker("option", "dateFormat", "yy-mm-dd");
+    $("#date").val("#{date}");
+    $("#start_time_hour").change(function() {
+      if ($("#end_time_hour").val() == "00") {
+        $("#end_time_hour").val($(this).val());
+      }
+    });
+  });
+
+= form_for @job_log do |f|
+  - if @job_log.errors.any?
+    #error_explanation
+      %h2= "#{pluralize(@job_log.errors.count, "error")} prohibited this job_log from being saved:"
+      %ul
+        - @job_log.errors.full_messages.each do |message|
+          %li= message
+
+  .form-group
+    %label{for: "date"}
+      日付
+    %input.form-control#date{type: "text", name: "job_log[date]", placeholder: "1900-01-01", autocomplete: "off"}
+  .form-group
+    %label{for: "start_time"}
+      開始時刻
+    = render partial: "shared/time_select", locals: {time_name: "start_time", time_value: @job_log.start_time, autocomplete: "off"}
+  .form-group
+    %label{for: "end_time"}
+      終了時刻
+    = render partial: "shared/time_select", locals: {time_name: "end_time", time_value: @job_log.end_time, autocomplete: "off"}
+  .form-group
+    %label{for: "title"}
+      作業内容
+    %input.form-control#title{type: "text", name: "job_log[title]", value: "#{@job_log.title}", placeholder: "コーディング", autocomplete: "on"}
+  .actions
+    %input{type: "submit", name: "commit", value: "保存", class: "btn btn-default"}

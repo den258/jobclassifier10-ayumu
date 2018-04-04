@@ -1,0 +1,39 @@
+
+- unless @memo.date
+  - if params[:date]
+    - date = params[:date]
+  - else
+    - date = Date.today.strftime("%Y-%m-%d")
+- else
+  - date = @memo.date
+
+:javascript
+  $(function() {
+    $("#date").datepicker();
+    $("#date").datepicker("option", "dateFormat", "yy-mm-dd");
+    $("#date").val("#{date}");
+  });
+
+= form_for @memo do |f|
+  - if @memo.errors.any?
+    #error_explanation
+      %h2= "#{pluralize(@memo.errors.count, "error")} prohibited this job_log from being saved:"
+      %ul
+        - @memo.errors.full_messages.each do |message|
+          %li= message
+
+  .form-group
+    %label{for: "date"}
+      日付
+    %input.form-control#date{type: "text", name: "memo[date]", value: "#{@memo.date}", placeholder: "1900-01-01"}
+  .form-group
+    %label{for: "time"}
+      時間
+    %input.form-control#time{type: "text", name: "memo[time]", value: "#{@memo.time}", placeholder: "13:00"}
+  .form-group
+    %label{for: "text"}
+      作業内容
+    %textarea.form-control#text{rows: "5", name: "memo[text]", id: "text"}
+      = @memo.text
+  .actions
+    %input{type: "submit", name: "commit", value: "保存", class: "btn btn-default"}

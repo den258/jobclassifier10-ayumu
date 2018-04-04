@@ -1,0 +1,146 @@
+
+:javascript
+  $(function() {
+    $("#date-from").datepicker();
+    $("#date-from").datepicker("option", "dateFormat", "yy-mm-dd");
+    $("#date-from").val("#{params[:date_from]}");
+    $("#date-to").datepicker();
+    $("#date-to").datepicker("option", "dateFormat", "yy-mm-dd");
+    $("#date-to").val("#{params[:date_to]}");
+  });
+
+:javascript
+  $(function() {
+    $("#keyword").autocomplete({
+      source: #{@keyword_list.to_s}
+    });
+  });
+
+:javascript
+  $(document).on('change', ':file', function() {
+    var input = $(this),
+    numFiles = input.get(0).files ? input.get(0).files.length : 1,
+    label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+    input.parent().parent().next(':text').val(label);
+  });
+
+- case params["tab"]
+  - when "manage"
+    - is_active_manage = "active"
+    - is_active_input = ""
+  - when "input"
+    - is_active_manage = ""
+    - is_active_input = "active"
+  - else
+    - is_active_manage = ""
+    - is_active_input = "active"
+
+%ul.nav.nav-tabs
+  %li{class: is_active_input}
+    %a{href: "#sampleContentA", "data-toggle" => "tab"}
+      作業記録
+  %li{class: is_active_manage}
+    %a{href: "#sampleContentB", "data-toggle" => "tab"}
+      データ管理
+.tab-content
+  %p
+  %div.tab-pane{id: "sampleContentA", class: is_active_input}
+    .search_box.alert.alert-info
+      = form_tag('/job_logs', method: :get) do
+        .form-group
+          %label{for: "date-from"}
+            .text100
+              日付から
+          %input.form-control#date-from{type: "text", name: "date_from", placeholder: "1900-01-01", autocomplete: "off"}
+        .form-group
+          %label{for: "date-to"}
+            .text100
+              日付まで
+          %input.form-control#date-to{type: "text", name: "date_to", placeholder: "3000-12-31", autocomplete: "off"}
+        .form-group
+          %label{for: "keyword"}
+            .text100
+              作業タイトル検索キーワード
+          %input.form-control#keyword{type: "text", name: "keyword", value: params[:keyword], placeholder: "検索キーワードを入力してください", autocomplete: "on"}
+        .actions
+          %input{type: "submit", name: "commit", value: "検索", class: "btn btn-default"}
+      %p.text150
+        = "作業時間の合計: " + @spend_time_amount.to_s + " 時間"
+    - today = Date.today.strftime("%Y-%m-%d")
+    - unless @dates.include?(today)
+      %h3{style: "margin-left: 10px;"}
+        = today
+        = "(" + %w[日 月 火 水 木 金 土][Date.today.wday] + ")"
+      %div
+        = link_to '新規追加', new_job_log_path(date: today), class: "btn btn-default", style: "margin-left: 10px;"
+      %hr
+    - @dates.each do | date |
+      %h3{style: "margin-left: 10px;"}
+        = date
+        = "(" + %w[日 月 火 水 木 金 土][DateTime.parse(date).wday] + ")"
+        = @time_amount_by_date[date]
+        時間
+      %div
+        = link_to '新規追加', new_job_log_path(date: date), class: "btn btn-default", style: "margin-left: 10px;"
+      %table.table.table-striped
+        %thead
+          %tr
+            %th
+              .record_top
+                = "["
+                = t('activerecord.attributes.job_logs.start_time')
+                = " - "
+                = t('activerecord.attributes.job_logs.end_time')
+                = "]"
+                = "(" + t('activerecord.attributes.job_logs.spend_time') + ")"
+              .record_buttom
+                = t('activerecord.attributes.job_logs.title')
+            %th.record_operation
+              操作
+        %tbody
+          - @job_logs.select{|k,v| k[date]}.each do | job_log |
+            %tr
+              %td
+                .record_top
+                  = "["
+                  = job_log[date].start_time
+                  = " - "
+                  = job_log[date].end_time
+                  = "]"
+                  = "(" + sprintf("%.2f", job_log[date].spend_time) + ")"
+                .record_buttom
+                  = job_log[date].title
+              %td.record_operation
+                = link_to '編集', edit_job_log_path(job_log[date]), class: "btn btn-default btn-xs"
+                = link_to '削除', job_log[date], method: :delete, class: "btn btn-default btn-xs", data: { confirm: '本当に削除してもよろしいですか？' }
+      %hr
+  %div.tab-pane{id: "sampleContentB", class: is_active_manage}
+    %p
+    %div.alert.alert-info
+      作業記録の全てのデータを Excel ファイルとしてダウンロードすることができます。
+    %div.input-group
+      = link_to 'すべての作業記録をダウンロードする', job_logs_file_download_path(format: :xlsx), class: "btn btn-default"
+    %hr
+    %div.alert.alert-info
+      Excel に書かれているデータを追加することができます。
+    - flash.each do |key, value|
+      %div.alert{class: "alert-" + key}
+        = value
+    %form{class: "form-inline", enctype: "multipart/form-data", action: "/job_logs/file_upload", name: "form", method: "post"}
+      %div{class: "form-group", style: "width:200px;"}
+        %div{class: "input-group"}
+          %input{type: "file", id: "file_upload", name: "file_upload", style: "display: none;"}
+          %span{class: "input-group-btn"}
+            %button{class: "btn btn-default", type: "button", onclick: "$('#file_upload').click();"}
+              %i{class: "glyphicon glyphicon-folder-open"}
+          %div{class: "input-group"}
+            %input{id: "dummy_file", type: "text", class: "form-control", placeholder: "select file...", disabled: "disabled"}       
+      %button{type: "submit", name: "csv_up", class: "btn btn-primary"}
+        upload
+    :javascript
+      $(function(){
+        $('#file_upload').change(function() {
+          $('#dummy_file').val($(this).val());
+        });
+      })
+    %hr
